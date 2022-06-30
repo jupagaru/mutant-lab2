@@ -22,10 +22,6 @@ public class Mutant implements Serializable{
 	private static final long serialVersionUID = 2447601727166923309L;
 	
 	@Id
-	@Column(name="mutant_id", unique = true, nullable = false)
-	@NotNull
-	private Integer mutantId;
-	
 	@Column(name = "adn", nullable = false)
 	@NotNull
 	private String adn;

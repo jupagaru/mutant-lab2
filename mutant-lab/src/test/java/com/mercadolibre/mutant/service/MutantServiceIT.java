@@ -2,10 +2,9 @@ package com.mercadolibre.mutant.service;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -15,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.mercadolibre.mutant.domain.Mutant;
+import com.mercadolibre.mutant.dto.MutantDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,12 +38,17 @@ class MutantServiceIT {
 	@Order(2)
 	void debeCrearRegistroMutant() throws Exception {
 		//Arrange
-		Integer mutantId = 1234;
 		
-		Mutant mutant = new Mutant();
-		mutant.setMutantId(mutantId);
-		mutant.setAdn("ATGCGA,CAGTGC,TTATGT,AGAAGG,CCCCTA,TCACTG");
-		mutant.setIsMutant("S");
+		MutantDTO mutant = new MutantDTO();
+		List<String> listAdn = new ArrayList<>();
+		listAdn.add("ATGCGA");
+		listAdn.add("CAGTGC");
+		listAdn.add("TTATGT");
+		listAdn.add("AGAAGG");
+		listAdn.add("CCCCTA");
+		listAdn.add("TCACTG");
+		
+		mutant.setAdn(listAdn);
 		
 		//Act
 		mutantService.save(mutant);
@@ -52,41 +57,6 @@ class MutantServiceIT {
 		assertNotNull(mutant, "El registro es nulo, no se pudo grabar");
 	}
 	
-	@Test
-	@Order(3)
-	void debeModificarRegistroMutant() throws Exception {
-		//Arrange
-		Integer mutantId = 1234;
-		Mutant mutant = null;
-		
-		mutant = mutantService.findById(mutantId).get();
-		mutant.setIsMutant("N");
-		
-		//Act
-		mutantService.update(mutant);
-		
-		//Assert
-		assertNotNull(mutant, "El registro nos se pudo modificar");
-	}
-	
-	@Test
-	@Order(4)
-	void debeBorrarRegistroMutant() throws Exception {
-		//Arrange
-		Integer mutantId = 1234;
-		Mutant mutant = null;
-		Optional<Mutant> mutantOptional = null;
-		
-		assertTrue(mutantService.findById(mutantId).isPresent(), "No encontró el registro");
-		mutant = mutantService.findById(mutantId).get();
-		
-		//Act
-		mutantService.delete(mutant);
-		mutantOptional = mutantService.findById(mutantId);
-		
-		//Assert
-		assertFalse(mutantOptional.isPresent(), "No se pudo borrar el registro");
-	}
 	
 	@Test
 	@Order(5)
@@ -98,7 +68,7 @@ class MutantServiceIT {
 		//Act
 		mutants = mutantService.findAll();
 		
-		mutants.forEach(mutant -> log.info(mutant.getMutantId().toString()));
+		mutants.forEach(mutant -> log.info(mutant.getAdn().toString()));
 		
 		//Assert
 		assertFalse(mutants.isEmpty(), "No encontró registros");

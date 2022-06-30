@@ -1,6 +1,8 @@
 package com.mercadolibre.mutant.repository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.mercadolibre.mutant.domain.Mutant;
-import com.mercadolibre.mutant.repository.MutantRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,10 +36,8 @@ class MutantRepositoryIT {
 	@Order(2)
 	void debeCrearRegistroMutant() {
 		//Arrange
-		Integer mutantId = 1234;
 		
 		Mutant mutant = new Mutant();
-		mutant.setMutantId(mutantId);
 		mutant.setAdn("ATGCGA,CAGTGC,TTATGT,AGAAGG,CCCCTA,TCACTG");
 		mutant.setIsMutant("S");
 		
@@ -95,7 +94,7 @@ class MutantRepositoryIT {
 		//Act
 		mutants = mutantRepository.findAll();
 		
-		mutants.forEach(mutant -> log.info(mutant.getMutantId().toString()));
+		mutants.forEach(mutant -> log.info(mutant.getAdn().toString()));
 		
 		//Assert
 		assertFalse(mutants.isEmpty(), "No encontró registros");
@@ -106,10 +105,9 @@ class MutantRepositoryIT {
 	@Order(6)
 	void debeCrearRegistroMutantAllArg() {
 		//Arrange
-		Integer mutantId = 1237;
 		String adn = "ATGCGA,CAGTGC,TTATGT,AGAAGG,CCCCTA,TCACTG";
 		String isMutant = "S";
-		Mutant mutant = new Mutant(mutantId, adn, isMutant);
+		Mutant mutant = new Mutant(adn, isMutant);
 		
 		//Act
 		mutantRepository.save(mutant);

@@ -1,5 +1,7 @@
 package com.mercadolibre.mutant.dto;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -12,12 +14,7 @@ import lombok.NoArgsConstructor;
 public class MutantDTO {
 	
 	@NotNull
-	private Integer mutantId;
-	
-	@NotNull
-	private String adn;
-	
-	@NotNull
-	private String isMutant;
+	private List<String> adn;
+
 
 }
