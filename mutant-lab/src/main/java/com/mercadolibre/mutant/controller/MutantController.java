@@ -1,7 +1,5 @@
 package com.mercadolibre.mutant.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mercadolibre.mutant.domain.Mutant;
 import com.mercadolibre.mutant.dto.MutantDTO;
+import com.mercadolibre.mutant.dto.StatisticsDTO;
 import com.mercadolibre.mutant.service.MutantService;
 
 @RestController
-@RequestMapping("/mutant")
+@RequestMapping()
 public class MutantController {
 	
 	@Autowired
@@ -35,20 +33,30 @@ public class MutantController {
 	 * @return ResponseEntity<Boolean> 
 	 * @throws Exception
 	 */
-	@PostMapping
+	@PostMapping("/mutant")
 	public ResponseEntity<Boolean> isMutant(@Valid @RequestBody MutantDTO mutantDTO) throws Exception{
 		Boolean isMutant = mutantService.save(mutantDTO);
-		return new ResponseEntity<>(isMutant, HttpStatus.OK);
+		if (isMutant) {
+			return new ResponseEntity<>(isMutant, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(isMutant, HttpStatus.FORBIDDEN);
+		}
 
 	}
 	
-	@GetMapping()
-	public ResponseEntity<List<Mutant>> findAll() throws Exception{
-		
-		List<Mutant> mutants = mutantService.findAll();
-		//List<MutantDTO> mutantDTOs = mutantMapper.mutantListToMutantDTOList(mutants);
-		
-		return ResponseEntity.ok().body(mutants);
+	/**
+	 * @author <a href="mailto:jupagaru@gmail.com">Juan Pablo García</a>
+	 * 
+	 * Metodo encargado de obtener las estádisticas de la información alojada
+	 * en la base de datos.
+	 * 
+	 * @return StatisticsDTO
+	 * @throws Exception
+	 */
+	@GetMapping("/stats")
+	public ResponseEntity<StatisticsDTO> findAll() throws Exception{
+		StatisticsDTO statisticsDTO = mutantService.findAll();
+		return ResponseEntity.ok().body(statisticsDTO);
 	}
 
 }

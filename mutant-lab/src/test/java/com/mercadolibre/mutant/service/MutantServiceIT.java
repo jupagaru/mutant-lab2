@@ -1,7 +1,5 @@
 package com.mercadolibre.mutant.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
@@ -14,14 +12,11 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.mercadolibre.mutant.domain.Mutant;
 import com.mercadolibre.mutant.dto.MutantDTO;
-
-import lombok.extern.slf4j.Slf4j;
+import com.mercadolibre.mutant.dto.StatisticsDTO;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
-@Slf4j
 class MutantServiceIT {
 	
 		
@@ -61,18 +56,17 @@ class MutantServiceIT {
 	
 	@Test
 	@Order(5)
-	void debeConsultarTodosLosRegistros() {
+	void debeConsultarTodosLosRegistros() throws Exception {
 		//Arrange
-		List<Mutant> mutants = null;
+		StatisticsDTO mutants = null;
 		
 		
 		//Act
 		mutants = mutantService.findAll();
 		
-		mutants.forEach(mutant -> log.info(mutant.getAdn().toString()));
 		
 		//Assert
-		assertFalse(mutants.isEmpty(), "No encontró registros");
+		assertNotNull(mutants, "No encontró registros");
 		
 	}
 	

@@ -1,13 +1,22 @@
 package com.mercadolibre.mutant.service;
 
-import java.util.List;
-
 import com.mercadolibre.mutant.domain.Mutant;
 import com.mercadolibre.mutant.dto.MutantDTO;
+import com.mercadolibre.mutant.dto.StatisticsDTO;
 
 public interface MutantService {
 	
-	List<Mutant> findAll();
+	/*+
+	 * @author <a href="mailto:jupagaru@gmail.com">Juan Pablo García</a>
+	 * 
+	 * Metodo encargado de obtener la estadísticas de los valores
+	 * alojados en la base de datos.
+	 * 
+	 * @param 
+	 * @return StatisticsDTO
+	 * @throws Exception
+	 */
+	StatisticsDTO findAll()throws Exception;
 
 	/**
 	 * @author <a href="mailto:jupagaru@gmail.com">Juan Pablo García</a>

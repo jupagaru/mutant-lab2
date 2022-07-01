@@ -1,9 +1,5 @@
 package com.mercadolibre.mutant.dto;
 
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,10 +9,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class MutantDTO {
+public class StatisticsDTO {
 	
-	@NotNull
-	private List<String> adn;
-
+	private Integer countMutantDna;
+	private Integer countHumanDna;
+	private float ratio;
 
 }

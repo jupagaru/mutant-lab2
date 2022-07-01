@@ -3,8 +3,6 @@ package com.mercadolibre.mutant.service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
@@ -19,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mercadolibre.mutant.domain.Mutant;
 import com.mercadolibre.mutant.dto.MutantDTO;
+import com.mercadolibre.mutant.dto.StatisticsDTO;
 import com.mercadolibre.mutant.repository.MutantRepository;
 
 @Service
@@ -46,8 +45,25 @@ public class MutantServiceImpl implements MutantService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Mutant> findAll() {
-		return mutantRepository.findAll();
+	public StatisticsDTO findAll() throws Exception {
+		List<Mutant> lstMutant = mutantRepository.findAll();
+
+		int countMutantDna = 0;
+		int countHumanDna = 0;
+		for(Mutant mutant : lstMutant) {
+			if (mutant.getIsMutant().equals("S")) {
+				countMutantDna++;
+			}else {
+				countHumanDna++;
+			}
+		}
+		StatisticsDTO satisticsDTO = new StatisticsDTO();
+		satisticsDTO.setCountHumanDna(countHumanDna);
+		satisticsDTO.setCountMutantDna(countMutantDna);
+		
+		float ratio = ((float) (countMutantDna / countHumanDna));
+		satisticsDTO.setRatio(ratio);
+		return satisticsDTO;
 	}
 
 	@Override
@@ -75,9 +91,8 @@ public class MutantServiceImpl implements MutantService {
 		 * separada por el caracter coma (,)
 		 */
 		String adnMutant = mutantDTO.getAdn().stream().map(Object::toString).collect(Collectors.joining(","));
-		
+
 		validarInformacionSuministrada(adnMutant);
-		
 
 		Mutant mutant = new Mutant();
 		mutant.setAdn(adnMutant);
@@ -99,27 +114,28 @@ public class MutantServiceImpl implements MutantService {
 
 	private void validarInformacionSuministrada(String adnMutant) throws Exception {
 		// Valida que la secuencia no tenga números
-		if(adnMutant.matches(".*[0-9].*")) {
+		if (adnMutant.matches(".*[0-9].*")) {
 			throw new Exception("La secuencia no puede contener números, solo debe tener las letras A,T,C,G");
 		}
-		
+
 		// Validamos que la secuencia solo contenga las letras A,T,C,G
-		/*Pattern pat = Pattern.compile("(A|B)+");
-	    Matcher mat = pat.matcher(adnMutant);                                                                           
-	    if (!mat.matches()) {
-	    	throw new Exception("La secuencia no puede contener valores diferentes a las letras A,T,C,G");                                                                                
-	     }*/
-		
+		/*
+		 * Pattern pat = Pattern.compile("(A|B)+"); Matcher mat =
+		 * pat.matcher(adnMutant); if (!mat.matches()) { throw new
+		 * Exception("La secuencia no puede contener valores diferentes a las letras A,T,C,G"
+		 * ); }
+		 */
+
 	}
 
 	/**
 	 * @author <a href="mailto:jupagaru@gmail.com">Juan Pablo García</a>
 	 * 
-	 * Metodo encargado de validar el ADN suministado, en caso 
-	 * de que coincida incrementará el valor de times.
+	 *         Metodo encargado de validar el ADN suministado, en caso de que
+	 *         coincida incrementará el valor de times.
 	 * 
-	 * Nota: La funcionalidad descrita a continuación fue obtenida del repositorio
-	 * https://github.com/andresrvilla/DNA-Analyzer
+	 *         Nota: La funcionalidad descrita a continuación fue obtenida del
+	 *         repositorio https://github.com/andresrvilla/DNA-Analyzer
 	 * 
 	 * @param mutantDTO
 	 * @param mutantSequence
