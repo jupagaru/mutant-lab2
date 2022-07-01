@@ -1,5 +1,6 @@
 package com.mercadolibre.mutant.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -74,5 +75,29 @@ class MutantServiceIT {
 		assertFalse(mutants.isEmpty(), "No encontró registros");
 		
 	}
+	
+	@Test
+	@Order(6)
+	void debeCrearPasandoArgumentosDTO() throws Exception {
+		//Arrange
+		
+		List<String> listAdn = new ArrayList<>();
+		listAdn.add("ATGCGA");
+		listAdn.add("CAGTGC");
+		listAdn.add("TTATGT");
+		listAdn.add("AGAAGG");
+		listAdn.add("CCCCTA");
+		listAdn.add("TCACTG");
+		
+		MutantDTO mutant = new MutantDTO(listAdn);
+		
+		
+		//Act
+		mutantService.save(mutant);
+		
+		//Assert
+		assertNotNull(mutant, "El registro no se pudo grabar");
+	}
+	
 
 }

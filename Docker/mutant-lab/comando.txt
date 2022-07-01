@@ -1,0 +1,3 @@
+docker build -t mutant-lab .
+
+docker run -d --name mutant-lab -p 9091:9091 --link eureka:eureka --link postgres:postgres mutant-lab

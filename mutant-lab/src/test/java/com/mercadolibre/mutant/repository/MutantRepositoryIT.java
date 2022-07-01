@@ -48,44 +48,9 @@ class MutantRepositoryIT {
 		assertNotNull(mutant, "El registro es nulo, no se pudo grabar");
 	}
 	
+	
 	@Test
 	@Order(3)
-	void debeModificarRegistroMutant() {
-		//Arrange
-		Integer mutantId = 1234;
-		Mutant mutant = null;
-		
-		mutant = mutantRepository.findById(mutantId).get();
-		mutant.setIsMutant("N");
-		
-		//Act
-		mutantRepository.save(mutant);
-		
-		//Assert
-		assertNotNull(mutant, "El registro nos se pudo modificar");
-	}
-	
-	@Test
-	@Order(4)
-	void debeBorrarRegistroMutant() {
-		//Arrange
-		Integer mutantId = 1234;
-		Mutant mutant = null;
-		Optional<Mutant> mutantOptional = null;
-		
-		assertTrue(mutantRepository.findById(mutantId).isPresent(), "No encontró el registro");
-		mutant = mutantRepository.findById(mutantId).get();
-		
-		//Act
-		mutantRepository.delete(mutant);
-		mutantOptional = mutantRepository.findById(mutantId);
-		
-		//Assert
-		assertFalse(mutantOptional.isPresent(), "No se pudo borrar el registro");
-	}
-	
-	@Test
-	@Order(5)
 	void debeConsultarTodosLosRegistros() {
 		//Arrange
 		List<Mutant> mutants = null;
@@ -102,7 +67,23 @@ class MutantRepositoryIT {
 	}
 	
 	@Test
-	@Order(6)
+	@Order(4)
+	void debeCrearRegistroMutantWithoutArg() {
+		//Arrange
+		String adn = "ATGCGA,CAGTGC,TTATGT,AGAAGG,CCCCTA,TCACTG";
+		String isMutant = "S";
+		Mutant mutant = new Mutant();
+		mutant.setAdn(adn);
+		mutant.setIsMutant(isMutant);
+		//Act
+		mutantRepository.save(mutant);
+		
+		//Assert
+		assertNotNull(mutant, "El registro es nulo, no se pudo grabar");
+	}
+	
+	@Test
+	@Order(5)
 	void debeCrearRegistroMutantAllArg() {
 		//Arrange
 		String adn = "ATGCGA,CAGTGC,TTATGT,AGAAGG,CCCCTA,TCACTG";

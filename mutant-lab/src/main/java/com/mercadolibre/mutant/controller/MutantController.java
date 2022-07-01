@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mercadolibre.mutant.domain.Mutant;
 import com.mercadolibre.mutant.dto.MutantDTO;
-import com.mercadolibre.mutant.mapper.MutantMapper;
 import com.mercadolibre.mutant.service.MutantService;
 
 @RestController
@@ -25,26 +24,31 @@ public class MutantController {
 	@Autowired
 	MutantService mutantService;
 	
-	@Autowired
-	MutantMapper mutantMapper;
 	
+	/**
+	 * @author <a href="mailto:jupagaru@gmail.com">Juan Pablo García</a>
+	 * 
+	 * Metodo encargado de validar el ADN de una persona, corroborando 
+	 * si es mutante o no
+	 * 
+	 * @param mutantDTO
+	 * @return ResponseEntity<Boolean> 
+	 * @throws Exception
+	 */
 	@PostMapping
-	public ResponseEntity<Boolean> save(@Valid @RequestBody MutantDTO mutantDTO) throws Exception{
-		Boolean isMutant = false;
-		
-		isMutant = mutantService.save(mutantDTO);
+	public ResponseEntity<Boolean> isMutant(@Valid @RequestBody MutantDTO mutantDTO) throws Exception{
+		Boolean isMutant = mutantService.save(mutantDTO);
 		return new ResponseEntity<>(isMutant, HttpStatus.OK);
-		// ResponseEntity.ok().body(mutantMapper.mutantToMutantDTO(mutant));
 
 	}
 	
 	@GetMapping()
-	public ResponseEntity<List<MutantDTO>> findAll() throws Exception{
+	public ResponseEntity<List<Mutant>> findAll() throws Exception{
 		
 		List<Mutant> mutants = mutantService.findAll();
 		//List<MutantDTO> mutantDTOs = mutantMapper.mutantListToMutantDTOList(mutants);
 		
-		return null; //ResponseEntity.ok().body(mutantMapper.mutantListToMutantDTOList(mutants));
+		return ResponseEntity.ok().body(mutants);
 	}
 
 }

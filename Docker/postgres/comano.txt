@@ -1,0 +1,1 @@
+docker run -d --name postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=mutant-lab -p 5432:5432 -v /Users/juanpablogarciaurrea/Documents/Academia/PruebasTecnicas/MercadoLibre/mutant-lab2/Docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql postgres
