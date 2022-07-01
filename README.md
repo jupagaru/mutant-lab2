@@ -39,7 +39,10 @@ realizar este paso, podemos realizar los siguiente:
 1. clonar clonar el repositorio.
 2. importar el proyecto en su framework de preferencia.
 3. asegurarnos de tener todos los microservicios (eureka-server, api-gateway, mutant-lab)
-4. Levantar cada microservicio en el siguiente orden:
+4. Ejecutar el siguiente comando para levantar postgres con la bd requerida.
+  - docker run -d --name postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=mutant-lab -p 5432:5432 -v /mutant-lab2/Docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql postgres
+  Nota: Se debe estar ubicado en la ruta /mutant-lab2/Docker/postgres/ del respositorio que clonamos en el paso 1
+5. Levantar cada microservicio en el siguiente orden:
   - eureka-server
   - api-gateway
   - mutant-lab
