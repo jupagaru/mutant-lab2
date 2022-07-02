@@ -3,6 +3,8 @@ package com.mercadolibre.mutant.service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
@@ -74,6 +76,14 @@ public class MutantServiceImpl implements MutantService {
 		}
 
 		String[] adnSequences = { sequenceAdenina, sequenceTimina, sequenceCitosina, sequenceGuanina };
+		
+		/*
+		 * Concatenamos la secuencia para luego proceder a guardarla en la base de datos
+		 * separada por el caracter coma (,)
+		 */
+		String adnMutant = mutantDTO.getAdn().stream().map(Object::toString).collect(Collectors.joining(","));
+
+		validarInformacionSuministrada(adnMutant, mutantDTO);
 
 		/*
 		 * Esto se hace con el fin de graficar la matriz y poder visualizarla en la
@@ -86,13 +96,6 @@ public class MutantServiceImpl implements MutantService {
 			System.out.println(Arrays.toString(mat));
 		}
 
-		/*
-		 * Concatenamos la secuencia para luego proceder a guardarla en la base de datos
-		 * separada por el caracter coma (,)
-		 */
-		String adnMutant = mutantDTO.getAdn().stream().map(Object::toString).collect(Collectors.joining(","));
-
-		validarInformacionSuministrada(adnMutant);
 
 		Mutant mutant = new Mutant();
 		mutant.setAdn(adnMutant);
@@ -112,19 +115,26 @@ public class MutantServiceImpl implements MutantService {
 		return isMutant;
 	}
 
-	private void validarInformacionSuministrada(String adnMutant) throws Exception {
+	private void validarInformacionSuministrada(String adnMutant, MutantDTO mutantDTO) throws Exception {
 		// Valida que la secuencia no tenga números
 		if (adnMutant.matches(".*[0-9].*")) {
 			throw new Exception("La secuencia no puede contener números, solo debe tener las letras A,T,C,G");
 		}
 
-		// Validamos que la secuencia solo contenga las letras A,T,C,G
-		/*
-		 * Pattern pat = Pattern.compile("(A|B)+"); Matcher mat =
-		 * pat.matcher(adnMutant); if (!mat.matches()) { throw new
-		 * Exception("La secuencia no puede contener valores diferentes a las letras A,T,C,G"
-		 * ); }
-		 */
+		// Validamos que cada cadena esté conformada por 6 letras
+		for(String mutant : mutantDTO.getAdn()) {
+			Pattern pat = Pattern.compile("[a-zA-Z]{6,6}");
+		     Matcher mat = pat.matcher(mutant);                                                                           
+		     if (!mat.matches()) {
+		    	 throw new Exception("Cada base nitrogenada debe estar conformada por 6 letras");
+		     }
+		     
+		     pat = Pattern.compile("(A|T|C|G)+");
+		     mat = pat.matcher(mutant);                                                                           
+		     if (!mat.matches()) {
+		    	 throw new Exception("La secuencia no puede contener valores diferentes a las letras A,T,C,G");                                                                                
+		     }
+		}
 
 	}
 
