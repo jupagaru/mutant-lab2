@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 public class StatisticsDTO {
 	
-	private Integer countMutantDna;
-	private Integer countHumanDna;
-	private float ratio;
+	private Double countMutantDna;
+	private Double countHumanDna;
+	private String ratio;
 
 }

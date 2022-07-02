@@ -1,5 +1,6 @@
 package com.mercadolibre.mutant.service;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -50,20 +51,24 @@ public class MutantServiceImpl implements MutantService {
 	public StatisticsDTO findAll() throws Exception {
 		List<Mutant> lstMutant = mutantRepository.findAll();
 
-		int countMutantDna = 0;
-		int countHumanDna = 0;
-		for(Mutant mutant : lstMutant) {
+		double countMutantDna = 0;
+		double countHumanDna = 0;
+		double resultadoRatio = 0;
+		for (Mutant mutant : lstMutant) {
 			if (mutant.getIsMutant().equals("S")) {
 				countMutantDna++;
-			}else {
+			} else {
 				countHumanDna++;
 			}
 		}
 		StatisticsDTO satisticsDTO = new StatisticsDTO();
 		satisticsDTO.setCountHumanDna(countHumanDna);
 		satisticsDTO.setCountMutantDna(countMutantDna);
+
+		DecimalFormat df = new DecimalFormat("#.00");
+		resultadoRatio = (countMutantDna / countHumanDna);
 		
-		float ratio = ((float) (countMutantDna / countHumanDna));
+		String ratio = String.valueOf(df.format(resultadoRatio));
 		satisticsDTO.setRatio(ratio);
 		return satisticsDTO;
 	}
@@ -76,7 +81,7 @@ public class MutantServiceImpl implements MutantService {
 		}
 
 		String[] adnSequences = { sequenceAdenina, sequenceTimina, sequenceCitosina, sequenceGuanina };
-		
+
 		/*
 		 * Concatenamos la secuencia para luego proceder a guardarla en la base de datos
 		 * separada por el caracter coma (,)
@@ -95,7 +100,6 @@ public class MutantServiceImpl implements MutantService {
 		for (char mat[] : matriz) {
 			System.out.println(Arrays.toString(mat));
 		}
-
 
 		Mutant mutant = new Mutant();
 		mutant.setAdn(adnMutant);
@@ -121,19 +125,19 @@ public class MutantServiceImpl implements MutantService {
 			throw new Exception("La secuencia no puede contener números, solo debe tener las letras A,T,C,G");
 		}
 
-		// Validamos que cada cadena esté conformada por 6 letras
-		for(String mutant : mutantDTO.getAdn()) {
+		// Validamos que cada cadena esté conformada por 6 letras y las que corresponden
+		for (String mutant : mutantDTO.getAdn()) {
 			Pattern pat = Pattern.compile("[a-zA-Z]{6,6}");
-		     Matcher mat = pat.matcher(mutant);                                                                           
-		     if (!mat.matches()) {
-		    	 throw new Exception("Cada base nitrogenada debe estar conformada por 6 letras");
-		     }
-		     
-		     pat = Pattern.compile("(A|T|C|G)+");
-		     mat = pat.matcher(mutant);                                                                           
-		     if (!mat.matches()) {
-		    	 throw new Exception("La secuencia no puede contener valores diferentes a las letras A,T,C,G");                                                                                
-		     }
+			Matcher mat = pat.matcher(mutant);
+			if (!mat.matches()) {
+				throw new Exception("Cada base nitrogenada debe estar conformada por 6 letras");
+			}
+
+			pat = Pattern.compile("(A|T|C|G)+");
+			mat = pat.matcher(mutant);
+			if (!mat.matches()) {
+				throw new Exception("La secuencia no puede contener valores diferentes a las letras A,T,C,G");
+			}
 		}
 
 	}
